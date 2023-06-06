@@ -1,8 +1,8 @@
 public class Utility {
-    public static long calculateHammingDistance(int[][] a) {
+    public static int calculateHammingDistance(int[][] a) {
         int k = a.length;
 
-        long hammingDistance = 0;
+        int hammingDistance = 0;
         for(int i=0;i<k;i++) {
             for(int j=0;j<k;j++) {
                 if(a[i][j] != (i*k + j + 1) && a[i][j] != 0) {
@@ -14,10 +14,10 @@ public class Utility {
         return hammingDistance;
     }
 
-    public static long calculateManhattanDistance(int[][] a) {
+    public static int calculateManhattanDistance(int[][] a) {
         int k = a.length;
 
-        long manhattanDistance = 0;
+        int manhattanDistance = 0;
         for(int i=0;i<k;i++) {
             for(int j=0;j<k;j++) {
                 int number = a[i][j];
@@ -38,18 +38,23 @@ public class Utility {
 
         long numberOfInversions = 0;
         // Now writing O(n^2), will change later
+
+        // Copying the array into a single dimension array, skip zero
+        int n = k*k - 1;
+        int arr[] = new int[n];
+        int index = 0;
         for(int i=0;i<k;i++) {
             for(int j=0;j<k;j++) {
-                int number = a[i][j];
+                if(a[i][j] != 0) {
+                    arr[index++] = a[i][j];
+                }
+            }
+        }
 
-                if(number != 0) {
-                    for(int p = i; p<k;p++) {
-                        for(int q=j; q<k;q++) {
-                            if(number > a[p][q] && a[p][q] != 0) {
-                                numberOfInversions++;
-                            }
-                        }
-                    }
+        for(int i=0;i<n;i++) {
+            for(int j=i+1;j<n;j++) {
+                if(arr[i] > arr[j]) {
+                    numberOfInversions++;
                 }
             }
         }
@@ -68,5 +73,30 @@ public class Utility {
         }
 
         return null;
+    }
+
+    static public int[][] createCopyOfArray(int[][] a) {
+        int k = a.length;
+
+        int[][] b = new int[k][k];
+        for(int i=0;i<k;i++) {
+            for(int j=0;j<k;j++) {
+                b[i][j] = a[i][j];
+            }
+        }
+
+        return b;
+    }
+
+    static public void printBoard(int[][] a) {
+        int k = a.length;
+
+        for(int i=0;i<k;i++) {
+            for(int j=0;j<k;j++) {
+                System.out.print(a[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
     }
 }

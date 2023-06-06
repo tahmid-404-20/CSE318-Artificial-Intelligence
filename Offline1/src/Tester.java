@@ -15,14 +15,17 @@ public class Tester {
             }
         }
 
-        System.out.println("Hamming distance: " + Utility.calculateHammingDistance(a));
-        System.out.println("Manhattan distance: " + Utility.calculateManhattanDistance(a));
+//        System.out.println("Hamming distance: " + Utility.calculateHammingDistance(a));
+//        System.out.println("Manhattan distance: " + Utility.calculateManhattanDistance(a));
 
         NPuzzle nPuzzle = new NPuzzle(a);
         if(nPuzzle.checkPossibility()) {
-            System.out.println("Possible");
+            System.out.println("Solvable Puzzle");
+            nPuzzle.findPathHamming();
+            System.out.println("***********************************");
+            nPuzzle.findPathManhattan();
         } else {
-            System.out.println("Not possible");
+            System.out.println("Unsolvable Puzzle");
         }
 
     }
