@@ -1,8 +1,11 @@
+import java.util.HashMap;
+import java.util.Map;
 import java.util.PriorityQueue;
 
 public class NPuzzle {
     Node root;
     long exploredNodeCount;
+    long expandedNodeCount;
 
     public NPuzzle(int[][] a) {
         this.root = new Node(a,null, 0);
@@ -24,6 +27,7 @@ public class NPuzzle {
 
     public void printSolutionDetails(Node node) {
         System.out.println("Number of nodes explored: " + exploredNodeCount);
+        System.out.println("Number of nodes expanded: " + expandedNodeCount);
         System.out.println("Minimum Number of Moves: " + node.g);
         System.out.println("Solution path:");
         printSolutionPath(node);
@@ -38,22 +42,27 @@ public class NPuzzle {
 
     public void findPathHamming() {
         System.out.println("Solution Using Hamming distance heuristic");
+
         PriorityQueue<Node> pq = new PriorityQueue<>();
+        Map<Node,Boolean> closedList = new HashMap<>();
+
         int hammingDistance = Utility.calculateHammingDistance(root.a);
         root.setH(hammingDistance);
 
+        closedList.put(root, true);
         pq.add(root);
         exploredNodeCount = 1;
         if(root.getH() == 0) {
             // we have reached solution
+            expandedNodeCount = 1;
             printSolutionDetails(root);
             return;
         }
 
-
+        expandedNodeCount = 0;
         while(!pq.isEmpty()) {
-//            System.out.println("Entered");
             Node node = pq.poll();
+            expandedNodeCount++;
 
             Index zeroIndex = Utility.findZero(node.a);
             int row = zeroIndex.row;
@@ -70,8 +79,13 @@ public class NPuzzle {
                     printSolutionDetails(newNode);
                     break;
                 }
-                pq.add(newNode);
-                exploredNodeCount++;
+
+                if(!closedList.containsKey(newNode)) {
+                    closedList.put(newNode, true);
+                    pq.add(newNode);
+                    exploredNodeCount++;
+                }
+
             }
 
             if(row < node.a.length-1) {  // Neighbor2, move blank down
@@ -85,8 +99,12 @@ public class NPuzzle {
                     printSolutionDetails(newNode);
                     break;
                 }
-                pq.add(newNode);
-                exploredNodeCount++;
+
+                if(!closedList.containsKey(newNode)) {
+                    closedList.put(newNode, true);
+                    pq.add(newNode);
+                    exploredNodeCount++;
+                }
             }
 
             if(col > 0) { // Neighbor3, move blank left
@@ -100,8 +118,12 @@ public class NPuzzle {
                     printSolutionDetails(newNode);
                     break;
                 }
-                pq.add(newNode);
-                exploredNodeCount++;
+
+                if(!closedList.containsKey(newNode)) {
+                    closedList.put(newNode, true);
+                    pq.add(newNode);
+                    exploredNodeCount++;
+                }
             }
 
             if(col < node.a.length-1) { // Neighbor3, move blank right
@@ -115,30 +137,39 @@ public class NPuzzle {
                     printSolutionDetails(newNode);
                     break;
                 }
-                pq.add(newNode);
-                exploredNodeCount++;
+
+                if(!closedList.containsKey(newNode)) {
+                    closedList.put(newNode, true);
+                    pq.add(newNode);
+                    exploredNodeCount++;
+                }
             }
         }
     }
 
     public void findPathManhattan() {
         System.out.println("Solution Using Manhattan distance heuristic");
+
         PriorityQueue<Node> pq = new PriorityQueue<>();
+        Map<Node,Boolean> closedList = new HashMap<>();
+
         int ManhattanDistance = Utility.calculateManhattanDistance(root.a);
         root.setH(ManhattanDistance);
 
+        closedList.put(root, true);
         pq.add(root);
         exploredNodeCount = 1;
         if(root.getH() == 0) {
             // we have reached solution
+            expandedNodeCount = 1;
             printSolutionDetails(root);
             return;
         }
 
-
+        expandedNodeCount = 0;
         while(!pq.isEmpty()) {
-//            System.out.println("Entered");
             Node node = pq.poll();
+            expandedNodeCount++;
 
             Index zeroIndex = Utility.findZero(node.a);
             int row = zeroIndex.row;
@@ -155,8 +186,13 @@ public class NPuzzle {
                     printSolutionDetails(newNode);
                     break;
                 }
-                pq.add(newNode);
-                exploredNodeCount++;
+
+                if(!closedList.containsKey(newNode)) {
+                    closedList.put(newNode, true);
+                    pq.add(newNode);
+                    exploredNodeCount++;
+                }
+
             }
 
             if(row < node.a.length-1) {  // Neighbor2, move blank down
@@ -170,8 +206,12 @@ public class NPuzzle {
                     printSolutionDetails(newNode);
                     break;
                 }
-                pq.add(newNode);
-                exploredNodeCount++;
+
+                if(!closedList.containsKey(newNode)) {
+                    closedList.put(newNode, true);
+                    pq.add(newNode);
+                    exploredNodeCount++;
+                }
             }
 
             if(col > 0) { // Neighbor3, move blank left
@@ -185,8 +225,12 @@ public class NPuzzle {
                     printSolutionDetails(newNode);
                     break;
                 }
-                pq.add(newNode);
-                exploredNodeCount++;
+
+                if(!closedList.containsKey(newNode)) {
+                    closedList.put(newNode, true);
+                    pq.add(newNode);
+                    exploredNodeCount++;
+                }
             }
 
             if(col < node.a.length-1) { // Neighbor3, move blank right
@@ -200,8 +244,12 @@ public class NPuzzle {
                     printSolutionDetails(newNode);
                     break;
                 }
-                pq.add(newNode);
-                exploredNodeCount++;
+
+                if(!closedList.containsKey(newNode)) {
+                    closedList.put(newNode, true);
+                    pq.add(newNode);
+                    exploredNodeCount++;
+                }
             }
         }
     }

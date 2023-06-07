@@ -39,4 +39,39 @@ public class Node implements Comparable{
         Node node = (Node)o;
         return ((this.g + this.h) - (node.g+node.h));
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Node)) return false;
+        Node node = (Node) o;
+
+        boolean equals = true;
+        for(int i=0;i<node.getA().length;i++) {
+            for(int j=0;j<node.getA().length;j++) {
+                if(this.getA()[i][j] != node.getA()[i][j]) {
+                    equals = false;
+                    break;
+                }
+            }
+            if(!equals) {
+                break;
+            }
+        }
+        return equals;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        int index = 0;
+        for(int i=0;i<this.getA().length;i++) {
+            for(int j=0;j<this.getA().length;j++) {
+                hash += this.getA()[i][j] * index;
+                index++;
+            }
+        }
+
+        return hash;
+    }
 }

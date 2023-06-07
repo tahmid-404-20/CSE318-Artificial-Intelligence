@@ -21,9 +21,9 @@ public class Tester {
         NPuzzle nPuzzle = new NPuzzle(a);
         if(nPuzzle.checkPossibility()) {
             System.out.println("Solvable Puzzle");
-            nPuzzle.findPathHamming();
-            System.out.println("***********************************");
             nPuzzle.findPathManhattan();
+            System.out.println("***********************************");
+            nPuzzle.findPathHamming();
         } else {
             System.out.println("Unsolvable Puzzle");
         }
