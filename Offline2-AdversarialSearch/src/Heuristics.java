@@ -31,7 +31,23 @@ public class Heuristics {
             boardDiff -= node.board[i];
         }
 
-        int additionalMoveDiff = node.numberOfAdditionalMoves - node.parent.numberOfAdditionalMoves;
+        int additionalMoveDiff;
+        Node parent = node.parent;
+        if(node.isMax != parent.isMax) {
+            additionalMoveDiff = node.numberOfAdditionalMoves - parent.numberOfAdditionalMoves;
+        } else {
+            // find previous parent whose isMax is different from node isMax
+            Node temp = parent;
+            while (temp != null && temp.isMax == node.isMax) {
+                temp = temp.parent;
+            }
+
+            if(temp == null) {
+                additionalMoveDiff = node.numberOfAdditionalMoves;
+            } else {
+                additionalMoveDiff = node.numberOfAdditionalMoves - temp.numberOfAdditionalMoves;
+            }
+        }
 
         // difference always from maxNode's perspective
         // think leaf as min, then diff is basically maxmove(which is in leaf) - minmove(which is in parent)
@@ -54,8 +70,27 @@ public class Heuristics {
             boardDiff -= node.board[i];
         }
 
-        int additionalMoveDiff = node.numberOfAdditionalMoves - node.parent.numberOfAdditionalMoves;
-        int capturedStonesDiff = node.numberOfCapturedStones - node.parent.numberOfCapturedStones;
+        int additionalMoveDiff;
+        int capturedStonesDiff;
+        Node parent = node.parent;
+        if(node.isMax != parent.isMax) {
+            additionalMoveDiff = node.numberOfAdditionalMoves - parent.numberOfAdditionalMoves;
+            capturedStonesDiff = node.numberOfCapturedStones - parent.numberOfCapturedStones;
+        } else {
+            // find previous parent whose isMax is different from node isMax
+            Node temp = parent;
+            while (temp != null && temp.isMax == node.isMax) {
+                temp = temp.parent;
+            }
+
+            if(temp == null) {
+                additionalMoveDiff = node.numberOfAdditionalMoves;
+                capturedStonesDiff = node.numberOfCapturedStones;
+            } else {
+                additionalMoveDiff = node.numberOfAdditionalMoves - temp.numberOfAdditionalMoves;
+                capturedStonesDiff = node.numberOfCapturedStones - temp.numberOfCapturedStones;
+            }
+        }
 
         // difference always from maxNode's perspective
         if(node.isMax) {

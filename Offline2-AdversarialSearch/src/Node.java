@@ -9,6 +9,7 @@ public class Node {
 
     Node parent;
     Node next;
+    int moveIndex;
 
     // for initial node
     public Node(int[] board, boolean isMax) {
@@ -39,6 +40,7 @@ public class Node {
         this.numberOfCapturedStones = 0;
         this.parent = parent;
         this.next = null;
+        this.moveIndex = moveIndex;
 
         move(moveIndex);
     }
@@ -71,6 +73,9 @@ public class Node {
             int nStones = board[index];
             board[index] = 0;
             int i;
+//            if(parent.parent == null) {
+//                System.out.println("Parent is null " + index + "---" + nStones);
+//            }
             for (i = index + 1; nStones > 0; i = (i + 1) % 13) {
                 board[i]++;
                 nStones--;
@@ -85,7 +90,7 @@ public class Node {
             if (i == 6) {
                 numberOfAdditionalMoves++;
             } else if (board[i] == 1 && i <= 5) { // check for capturing stones, i>=0 is true
-                numberOfCapturedStones += board[12 - i];
+                numberOfCapturedStones = board[12 - i];
                 board[12 - i] = 0;
                 board[6] += (numberOfCapturedStones + board[i]);  // putting both in mancala
                 board[i] = 0;
@@ -113,9 +118,8 @@ public class Node {
             // check for additional moves
             if (i == 13) {
                 numberOfAdditionalMoves++;
-
             } else if (board[i] == 1 && i >= 7) { // check for capturing stones
-                numberOfCapturedStones += board[12 - i];
+                numberOfCapturedStones = board[12 - i];
                 board[12 - i] = 0;
                 board[13] += (numberOfCapturedStones + board[i]);  // putting both in mancala
                 board[i] = 0;
