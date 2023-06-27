@@ -52,9 +52,9 @@ public class NPuzzle {
         closedList.put(root, true);
         pq.add(root);
         exploredNodeCount = 1;
+        expandedNodeCount = 0;
         if(root.getH() == 0) {
             // we have reached solution
-            expandedNodeCount = 1;
             printSolutionDetails(root);
             return;
         }
@@ -159,14 +159,13 @@ public class NPuzzle {
         closedList.put(root, true);
         pq.add(root);
         exploredNodeCount = 1;
+        expandedNodeCount = 0;
         if(root.getH() == 0) {
             // we have reached solution
-            expandedNodeCount = 1;
             printSolutionDetails(root);
             return;
         }
 
-        expandedNodeCount = 0;
         while(!pq.isEmpty()) {
             Node node = pq.poll();
             expandedNodeCount++;
