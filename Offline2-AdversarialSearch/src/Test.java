@@ -149,11 +149,9 @@ public class Test {
         Scanner scr = new Scanner(System.in);
 
         int[] board = new int[14];
-
         for(int i=0; i<14; i++) {
             board[i] = 4;
         }
-
         board[6] = 0;
         board[13] = 0;
 
