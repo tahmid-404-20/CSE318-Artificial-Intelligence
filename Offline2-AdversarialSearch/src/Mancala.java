@@ -8,13 +8,13 @@ public class Mancala {
             // evaluate alpha(maxNode) and beta(minNode) based on heuristic
             if (node.isMax) {
 //                node.alpha = Heuristics.heuristic1(node);
-//                node.alpha = Heuristics.heuristic2(node);
+                node.alpha = Heuristics.heuristic2(node);
 //                node.alpha = Heuristics.heuristic3(node);
-                node.alpha = Heuristics.heuristic4(node);
+//                node.alpha = Heuristics.heuristic4(node);
             } else {
 //                node.beta = Heuristics.heuristic1(node);
-//                node.beta = Heuristics.heuristic2(node);
-                node.beta = Heuristics.heuristic3(node);
+                node.beta = Heuristics.heuristic2(node);
+//                node.beta = Heuristics.heuristic3(node);
 //                node.beta = Heuristics.heuristic4(node);
             }
         } else {
