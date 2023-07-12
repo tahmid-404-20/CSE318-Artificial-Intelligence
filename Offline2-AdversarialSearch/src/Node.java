@@ -47,35 +47,10 @@ public class Node {
 
     // this function updates the board according to proper move (+multiple turns) and updates the additional moves and captured stones
     void move(int index) {
-//        printBoard();
         if (!isMax) {  // additional move calculation corresponds to parent's move
-//                System.out.println("Player 1's turn");
-
-            // if want to take input from user, uncomment this
-//                Scanner scr = new Scanner(System.in);
-                /*
-                while (true) {
-                    int bin = scr.nextInt();
-                    index = bin + 6;
-                    if (index > 12 || index < 7) {
-                        System.out.print("Invalid bin no. Enter bin no again: ");
-                    } else {
-                        int count = board[index];
-                        if (count == 0) {
-                            System.out.print("Invalid bin, no Stone. Enter bin no again: ");
-                        } else {
-                            break;
-                        }
-                    }
-                }
-                */
-
             int nStones = board[index];
             board[index] = 0;
             int i;
-//            if(parent.parent == null) {
-//                System.out.println("Parent is null " + index + "---" + nStones);
-//            }
             for (i = index + 1; nStones > 0; i = (i + 1) % 13) {
                 board[i]++;
                 nStones--;
@@ -89,16 +64,14 @@ public class Node {
             // check for additional moves
             if (i == 6) {
                 numberOfAdditionalMoves++;
-            } else if (board[i] == 1 && i <= 5) { // check for capturing stones, i>=0 is true
+            } else if (board[i] == 1 && i <= 5 && board[12 - i] != 0) { // check for capturing stones, i>=0 is true
                 numberOfCapturedStones = board[12 - i];
                 board[12 - i] = 0;
                 board[6] += (numberOfCapturedStones + board[i]);  // putting both in mancala
                 board[i] = 0;
             }
 
-        } else { // player2
-//                System.out.println("Player 2's turn(Choose a bin from 1-6): ");
-
+        } else {
             int nStones = board[index];
             board[index] = 0;
             int i;
@@ -118,7 +91,7 @@ public class Node {
             // check for additional moves
             if (i == 13) {
                 numberOfAdditionalMoves++;
-            } else if (board[i] == 1 && i >= 7) { // check for capturing stones
+            } else if (board[i] == 1 && i >= 7 && board[12 - i] != 0) { // check for capturing stones
                 numberOfCapturedStones = board[12 - i];
                 board[12 - i] = 0;
                 board[13] += (numberOfCapturedStones + board[i]);  // putting both in mancala

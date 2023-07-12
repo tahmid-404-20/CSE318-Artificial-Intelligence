@@ -2,13 +2,16 @@ import java.util.Scanner;
 
 public class Mancala {
     public static final int MAX_DEPTH = 15;
+    static long exploredNodes;
+    static long prunedNodes;
 
     static void visit(Node node) {
+        exploredNodes++;
         if (node.isLeaf()) {
             // evaluate alpha(maxNode) and beta(minNode) based on heuristic
             if (node.isMax) {
-//                node.alpha = Heuristics.heuristic1(node);
-                node.alpha = Heuristics.heuristic2(node);
+                node.alpha = Heuristics.heuristic1(node);
+//                node.alpha = Heuristics.heuristic2(node);
 //                node.alpha = Heuristics.heuristic3(node);
 //                node.alpha = Heuristics.heuristic4(node);
             } else {
@@ -22,16 +25,14 @@ public class Mancala {
             for (int binCount = 6; binCount > 0; binCount--, i++) {
                 if (node.board[i] != 0) {
                     Node child;
-//                    if (node.parent == null) {  // for first node
-//                        child = new Node(node.board, node.depth + 1, node.alpha, node.beta, !node.isMax, i,
-//                                0, 0, node);
-//                    } else {
+                    // here creating the child node and testing whether it gained any additional move or not
+                    // if gains, it the tree structure, we get the same MAX/MIN node again
+                    // example MAX - MIN - MAX - MAX - MAX - MAX - MIN
                     child = new Node(node.board, node.depth + 1, node.alpha, node.beta, !node.isMax, i,
                             node.numberOfAdditionalMoves, node);
-//                    }
 
-                    if (child.numberOfAdditionalMoves - node.numberOfAdditionalMoves > 0) {
-                        child.numberOfAdditionalMoves = node.numberOfAdditionalMoves + 1;
+                    if (child.numberOfAdditionalMoves - node.numberOfAdditionalMoves > 0) { //gained additional move
+                        // child.additionalMoves - parent.additionalMoves = 1
                         child.numberOfCapturedStones = node.numberOfCapturedStones; // no change in captured stones if additional move
                         child.isMax = node.isMax; // no change in player if additional move
                     } else {
@@ -74,6 +75,9 @@ public class Mancala {
 
 //                alpha-beta pruning
                 if (node.alpha >= node.beta) {
+                    for(;binCount > 0; binCount--, i++) {
+                        prunedNodes += (node.board[i] != 0) ? 1 : 0;
+                    }
                     break;
                 }
             }
@@ -94,18 +98,16 @@ public class Mancala {
         node.printBoard();
 
         while (true) {
+            exploredNodes = 0;
+            prunedNodes = 0;
             visit(node);
             Node parent = node;
+            System.out.println("Explored nodes: " + exploredNodes + " pruned nodes: " + prunedNodes);
             node = node.next;  // next move
 
             System.out.println("Player" + (parent.isMax ? "1" : "2") + " move: index " + (node.moveIndex+1));
             node.printBoard();
 
-//            try {
-//                Thread.sleep(5000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
             if (node.isComplete()) {
                 break;
             } else {
@@ -216,7 +218,7 @@ public class Mancala {
                     break;
                 }
                 System.out.println("Additional move of player2!");
-            } else if(board[i] == 1 && i >= 7) { // check for capturing stones
+            } else if(board[i] == 1 && i >= 7 && board[12 - i] != 0) { // check for capturing stones
                 int numberOfCapturedStones = board[12-i];
                 board[12-i] = 0;
                 board[13] += (numberOfCapturedStones + board[i]);  // putting both in mancala
@@ -241,7 +243,7 @@ public class Mancala {
     }
 
     public static void main(String[] args) {
-//        autoPlay();
-        playAsPlayer2();
+        autoPlay();
+//        playAsPlayer2();
     }
 }
