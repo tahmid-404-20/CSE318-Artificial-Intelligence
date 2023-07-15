@@ -1,7 +1,12 @@
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Mancala {
-    public static final int MAX_DEPTH = 15;
+    public static final int MAX_DEPTH = 10;
+    static int player1Heuristic = 2;
+    static int player2Heuristic = 2;
     static long exploredNodes;
     static long prunedNodes;
 
@@ -10,15 +15,19 @@ public class Mancala {
         if (node.isLeaf()) {
             // evaluate alpha(maxNode) and beta(minNode) based on heuristic
             if (node.isMax) {
-                node.alpha = Heuristics.heuristic1(node);
-//                node.alpha = Heuristics.heuristic2(node);
-//                node.alpha = Heuristics.heuristic3(node);
-//                node.alpha = Heuristics.heuristic4(node);
+                switch (player1Heuristic) {
+                    case 1 -> node.alpha = Heuristics.heuristic1(node);
+                    case 2 -> node.alpha = Heuristics.heuristic2(node);
+                    case 3 -> node.alpha = Heuristics.heuristic3(node);
+                    case 4 -> node.alpha = Heuristics.heuristic4(node);
+                }
             } else {
-//                node.beta = Heuristics.heuristic1(node);
-                node.beta = Heuristics.heuristic2(node);
-//                node.beta = Heuristics.heuristic3(node);
-//                node.beta = Heuristics.heuristic4(node);
+                switch (player2Heuristic) {
+                    case 1 -> node.beta = Heuristics.heuristic1(node);
+                    case 2 -> node.beta = Heuristics.heuristic2(node);
+                    case 3 -> node.beta = Heuristics.heuristic3(node);
+                    case 4 -> node.beta = Heuristics.heuristic4(node);
+                }
             }
         } else {
             int i = node.isMax ? 0 : 7;
@@ -54,7 +63,7 @@ public class Mancala {
                     }
 
                     visit(child);
-                    if (node.isMax) {
+                    if (node.isMax) {  // i am max, so update alpha
                         if (!child.isMax && (child.beta > node.alpha)) {
                             node.alpha = child.beta;
                             node.next = child;
@@ -73,8 +82,8 @@ public class Mancala {
                     }
                 }
 
-//                alpha-beta pruning
-                if (node.alpha >= node.beta) {
+//                alpha-beta pruning, for parent child of different type
+                if (node.alpha >= node.beta && node.parent.isMax == node.isMax) {
                     for(;binCount > 0; binCount--, i++) {
                         prunedNodes += (node.board[i] != 0) ? 1 : 0;
                     }
@@ -85,7 +94,7 @@ public class Mancala {
     }
 
 
-    static void autoPlay() {
+    static Result autoPlay() {
         int[] board = new int[14];
         for (int i = 0; i < 14; i++) {
             board[i] = 4;
@@ -121,8 +130,16 @@ public class Mancala {
 
         // complete the game
         supplyRemainingStones(node);
-        System.out.println("Player" + (node.board[6] > node.board[13] ? "1" : "2") + " wins!");
+        String resultAnnounced = null;
+        if(node.board[6] == node.board[13]) {
+            resultAnnounced = "Draw";
+        } else {
+            resultAnnounced = "Player" + (node.board[6] > node.board[13] ? "1" : "2") + " wins!";
+        }
+        System.out.println(resultAnnounced);
         System.out.println("Player1: " + node.board[6] + " Player2: " + node.board[13]);
+
+        return new Result(resultAnnounced, node.board[6], node.board[13]);
     }
 
     static void playAsPlayer2() {
@@ -242,7 +259,28 @@ public class Mancala {
         }
     }
 
+    static void generateStatistics() {
+        // Open a .txt file
+        try {
+            FileOutputStream fos = new FileOutputStream("Statistics.csv");
+            String header = "Player1_Heuristic,Player2_Heuristic,Result,Player1_Mancala,Player2_Mancala\n";
+            fos.write(header.getBytes(), 0, header.length());
+            for(int i=1;i<=4;i++) {
+                for(int j=1;j<=4;j++) {
+                    player1Heuristic = i;
+                    player2Heuristic = j;
+                    Result result = autoPlay();
+                    String str = i + "," + j + "," + result.result + "," + result.player1Mancala + "," + result.player2Mancala + "\n";
+                    fos.write(str.getBytes(), 0, str.length());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
+//        generateStatistics();
         autoPlay();
 //        playAsPlayer2();
     }

@@ -12,7 +12,7 @@ public class Heuristics {
     }
     //  mancalaDiff
     public static int heuristic1(Node node) {
-        return node.board[6] - node.board[13];
+        return 3*(node.board[6] - node.board[13]);
     }
 
 //  mancalaDiff + BoardDiff
@@ -20,7 +20,7 @@ public class Heuristics {
         int mancalaDiff = node.board[6] - node.board[13];
 
         int boardDiff = boardDiff(node);
-        return mancalaDiff + boardDiff;
+        return 2*mancalaDiff + boardDiff;
     }
 
 //  mancalaDiff + BoardDiff + AdditionalMoveDiff
@@ -29,7 +29,7 @@ public class Heuristics {
         int boardDiff = boardDiff(node);
 
         int additionalMoves = node.isMax ? node.numberOfAdditionalMoves : -node.numberOfAdditionalMoves;
-        return mancalaDiff + boardDiff + additionalMoves;
+        return 2*mancalaDiff + 3*boardDiff + 2*additionalMoves;
     }
 
 //  mancalaDiff + BoardDiff + AdditionalMoveDiff + CapturedStonesDiff
@@ -40,7 +40,7 @@ public class Heuristics {
         int additionalMoves = node.isMax ? node.numberOfAdditionalMoves : -node.numberOfAdditionalMoves;
         int capturedStones = node.isMax ? node.numberOfCapturedStones : -node.numberOfCapturedStones;
 
-        return mancalaDiff + boardDiff + additionalMoves + capturedStones;
+        return 2*mancalaDiff + 4*boardDiff + 3*additionalMoves + 2*capturedStones;
     }
 
 }
