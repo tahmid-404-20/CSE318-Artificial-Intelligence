@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Mancala {
-    public static final int MAX_DEPTH = 10;
+    public static final int MAX_DEPTH = 14;
     static int player1Heuristic = 2;
-    static int player2Heuristic = 2;
+    static int player2Heuristic = 1;
     static long exploredNodes;
     static long prunedNodes;
 
@@ -82,8 +82,8 @@ public class Mancala {
                     }
                 }
 
-//                alpha-beta pruning, for parent child of different type
-                if (node.alpha >= node.beta && node.parent.isMax == node.isMax) {
+//                alpha-beta pruning, for parent-child of different type
+                if (node.alpha >= node.beta && node.parent.isMax != node.isMax) {
                     for(;binCount > 0; binCount--, i++) {
                         prunedNodes += (node.board[i] != 0) ? 1 : 0;
                     }
@@ -130,7 +130,7 @@ public class Mancala {
 
         // complete the game
         supplyRemainingStones(node);
-        String resultAnnounced = null;
+        String resultAnnounced;
         if(node.board[6] == node.board[13]) {
             resultAnnounced = "Draw";
         } else {
@@ -281,7 +281,7 @@ public class Mancala {
 
     public static void main(String[] args) {
 //        generateStatistics();
-        autoPlay();
-//        playAsPlayer2();
+//        autoPlay();
+        playAsPlayer2();
     }
 }

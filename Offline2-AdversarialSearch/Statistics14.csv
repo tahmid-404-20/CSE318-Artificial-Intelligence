@@ -1,0 +1,17 @@
+Player1_Heuristic,Player2_Heuristic,Result,Player1_Mancala,Player2_Mancala
+1,1,Player2 wins!,19,29
+1,2,Player1 wins!,30,18
+1,3,Player1 wins!,29,19
+1,4,Player1 wins!,29,19
+2,1,Player1 wins!,35,13
+2,2,Player1 wins!,29,19
+2,3,Player1 wins!,27,21
+2,4,Player1 wins!,31,17
+3,1,Player1 wins!,36,12
+3,2,Player1 wins!,34,14
+3,3,Player1 wins!,26,22
+3,4,Player1 wins!,28,20
+4,1,Player2 wins!,23,25
+4,2,Player1 wins!,32,16
+4,3,Player1 wins!,27,21
+4,4,Player2 wins!,21,27
