@@ -25,7 +25,13 @@ public class Tester {
             }
 
             MaxCut maxCut = new MaxCut(n, edges);
-            maxCut.generateMaxCut(1.0, 0);
+            for(int i=0; i<=10; i++) {
+                double alpha = 0.1 * i;
+                System.out.println("alpha = " + alpha);
+                maxCut.generateMaxCut(alpha, 0);
+                System.out.println();
+            }
+
 
             // Close the scanner and input stream
             scr.close();
