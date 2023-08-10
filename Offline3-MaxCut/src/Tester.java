@@ -28,7 +28,7 @@ public class Tester {
             for(int i=0; i<=10; i++) {
                 double alpha = 0.1 * i;
                 System.out.println("alpha = " + alpha);
-                maxCut.generateMaxCut(alpha, 0);
+                maxCut.generateMaxCut(alpha, 100);
                 System.out.println();
             }
 

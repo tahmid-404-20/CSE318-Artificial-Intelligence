@@ -80,95 +80,108 @@ public class MaxCut {
 
 
     void generateMaxCut(double alpha, int maxIterations) {
-        // greedy part
-        Edge randomEdge = chooseFirstEdge(alpha);
+        int max = Integer.MIN_VALUE;
+        int maxWithoutLocalSearch = Integer.MIN_VALUE;
 
-        // now defining two partitions X and Y
-        List<Integer> X = new ArrayList<>();
-        List<Integer> Y = new ArrayList<>();
-        // V = X U Y
-        List<Integer> V = new ArrayList<>();
-        for(int i = 0; i < n; i++) {
-            V.add(i);
-        }
+        for(int k=0;k<maxIterations;k++) {
+            // greedy part
+            Edge randomEdge = chooseFirstEdge(alpha);
 
-        Assignment[] assignments = new Assignment[n];
-
-        X.add(randomEdge.src);
-        assignments[randomEdge.src] = Assignment.ASSIGNED_TO_X;
-        Y.add(randomEdge.dest);
-        assignments[randomEdge.dest] = Assignment.ASSIGNED_TO_Y;
-        // remove these two nodes from V
-        V.remove((Integer) randomEdge.src);
-        V.remove((Integer) randomEdge.dest);
-
-        // now we have to assign each node in V to X or Y
-        while(V.size() > 0) {
-            List<Enrollment> RCL = computeRCL(X, Y, V, alpha);
-
-            Random random = new Random();
-            int randomIndex = random.nextInt(RCL.size());
-            Enrollment enrollment = RCL.get(randomIndex);
-
-            if(enrollment.assignment == Assignment.ASSIGNED_TO_X) {
-                X.add(enrollment.index);
-                assignments[enrollment.index] = Assignment.ASSIGNED_TO_X;
-            } else {
-                Y.add(enrollment.index);
-                assignments[enrollment.index] = Assignment.ASSIGNED_TO_Y;
+            // now defining two partitions X and Y
+            List<Integer> X = new ArrayList<>();
+            List<Integer> Y = new ArrayList<>();
+            // V = X U Y
+            List<Integer> V = new ArrayList<>();
+            for(int i = 0; i < n; i++) {
+                V.add(i);
             }
-            V.remove((Integer) enrollment.index);
-        }
 
-        System.out.println("Before local search: " + computeCutCost(X, Y));
+            Assignment[] assignments = new Assignment[n];
 
+            X.add(randomEdge.src);
+            assignments[randomEdge.src] = Assignment.ASSIGNED_TO_X;
+            Y.add(randomEdge.dest);
+            assignments[randomEdge.dest] = Assignment.ASSIGNED_TO_Y;
+            // remove these two nodes from V
+            V.remove((Integer) randomEdge.src);
+            V.remove((Integer) randomEdge.dest);
 
-        // local search part
-        // repeat until no improvement is possible
-        boolean change = true;
-        while(change) {
-            change = false;
-            for(int i=0; (i<n && !change); i++) {
-                int currentCost = 0;
-                if(assignments[i] == Assignment.ASSIGNED_TO_X) {
-                    for(Integer y:Y) {
-                        currentCost += graph[i][y];
-                    }
-                    // now move i from X to Y and compute new cost
-                    int newCost = 0;
-                    for(Integer x:X) {
-                        if(x != i) {
-                            newCost += graph[x][i];
-                        }
-                    }
-                    if(newCost > currentCost) {
-                        change = true;
-                        X.remove((Integer) i);
-                        Y.add(i);
-                        assignments[i] = Assignment.ASSIGNED_TO_Y;
-                    }
+            // now we have to assign each node in V to X or Y
+            while(V.size() > 0) {
+                List<Enrollment> RCL = computeRCL(X, Y, V, alpha);
+
+                Random random = new Random();
+                int randomIndex = random.nextInt(RCL.size());
+                Enrollment enrollment = RCL.get(randomIndex);
+
+                if(enrollment.assignment == Assignment.ASSIGNED_TO_X) {
+                    X.add(enrollment.index);
+                    assignments[enrollment.index] = Assignment.ASSIGNED_TO_X;
                 } else {
-                    for(Integer x:X) {
-                        currentCost += graph[i][x];
-                    }
-                    // now move i from Y to X and compute new cost
-                    int newCost = 0;
-                    for(Integer y:Y) {
-                        if(y != i) {
-                            newCost += graph[i][y];
+                    Y.add(enrollment.index);
+                    assignments[enrollment.index] = Assignment.ASSIGNED_TO_Y;
+                }
+                V.remove((Integer) enrollment.index);
+            }
+
+            int cutCostWithoutLocalSearch = computeCutCost(X, Y);
+
+            // local search part
+            // repeat until no improvement is possible
+            boolean change = true;
+            while(change) {
+                change = false;
+                for(int i=0; (i<n && !change); i++) {
+                    int currentCost = 0;
+                    if(assignments[i] == Assignment.ASSIGNED_TO_X) {
+                        for(Integer y:Y) {
+                            currentCost += graph[i][y];
                         }
-                    }
-                    if(newCost > currentCost) {
-                        change = true;
-                        Y.remove((Integer) i);
-                        X.add(i);
-                        assignments[i] = Assignment.ASSIGNED_TO_X;
+                        // now move i from X to Y and compute new cost
+                        int newCost = 0;
+                        for(Integer x:X) {
+                            if(x != i) {
+                                newCost += graph[x][i];
+                            }
+                        }
+                        if(newCost > currentCost) {
+                            change = true;
+                            X.remove((Integer) i);
+                            Y.add(i);
+                            assignments[i] = Assignment.ASSIGNED_TO_Y;
+                        }
+                    } else {
+                        for(Integer x:X) {
+                            currentCost += graph[i][x];
+                        }
+                        // now move i from Y to X and compute new cost
+                        int newCost = 0;
+                        for(Integer y:Y) {
+                            if(y != i) {
+                                newCost += graph[i][y];
+                            }
+                        }
+                        if(newCost > currentCost) {
+                            change = true;
+                            Y.remove((Integer) i);
+                            X.add(i);
+                            assignments[i] = Assignment.ASSIGNED_TO_X;
+                        }
                     }
                 }
             }
+
+            int cutCost = computeCutCost(X, Y);
+
+            if(cutCost > max) {
+                max = cutCost;
+                maxWithoutLocalSearch = cutCostWithoutLocalSearch;
+            }
         }
 
-        System.out.println("After local search: " + computeCutCost(X, Y));
+        System.out.println("Before Local Search: " + maxWithoutLocalSearch);
+        System.out.println("After Local Search: " + max);
+
     }
 
     private int computeCutCost(List<Integer> X, List<Integer> Y) {
