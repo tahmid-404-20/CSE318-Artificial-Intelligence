@@ -79,7 +79,7 @@ public class MaxCut {
 
 
 
-    void generateMaxCut(double alpha, int maxIterations) {
+    int generateMaxCut(double alpha, int maxIterations) {
         int max = Integer.MIN_VALUE;
         int maxWithoutLocalSearch = Integer.MIN_VALUE;
 
@@ -179,8 +179,7 @@ public class MaxCut {
             }
         }
 
-        System.out.println("Before Local Search: " + maxWithoutLocalSearch);
-        System.out.println("After Local Search: " + max);
+        return max;
 
     }
 
