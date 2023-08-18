@@ -1,12 +1,9 @@
-import com.sun.security.jgss.InquireType;
-
 import java.io.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ReportGenerator {
-    public static final int MAX_ITERATIONS = 20;
-    public static final double ALPHA = 0.7;
+    public static final int MAX_ITERATIONS = 50;
+    public static final double ALPHA = 0.6;
 
     public static void main(String[] args) throws IOException {
         InputStream originalSystemIn = System.in;
@@ -21,7 +18,7 @@ public class ReportGenerator {
 
         HashMap<Integer, Integer> knownBest = (HashMap<Integer, Integer>) readKnownBest();
 
-        for(Integer key : knownBest.keySet().stream().sorted().toList()) {
+        for(int key=1; key <= 54; key++) {
             String fileName = "g" + key;
             String filePath = "inputs/" + fileName + ".rud";
             FileInputStream fileInputStream = new FileInputStream(filePath);
@@ -43,7 +40,7 @@ public class ReportGenerator {
 
             System.out.println("Running for file g" + key);
 
-            int knownBestVal = knownBest.get(key);
+           String knownBestVal = (knownBest.containsKey(key)) ? Integer.toString(knownBest.get(key)) : ",";
 
             System.out.println("Running randomized-1");
             Result randomResult = maxCut.maxCutRandom(MAX_ITERATIONS);
